@@ -20,11 +20,11 @@ ALTER TABLE t_user COMMENT '회원정보_끝';
 -- t_artist Table Create SQL
 CREATE TABLE IF NOT EXISTS t_artist
 (
-    `id`         INT            NOT NULL    AUTO_INCREMENT, 
-    `email`      VARCHAR(45)    NOT NULL    COMMENT '아티스트 계정', 
-    `artist`     VARCHAR(45)    NOT NULL    COMMENT '아티스트 명', 
-    `comment`    VARCHAR(45)    NULL        COMMENT '아티스트 설명', 
-    `image_src`  VARCHAR(45)    NULL        COMMENT '아티스트 사진주소', 
+    `id`           INT            NOT NULL    AUTO_INCREMENT, 
+    `email`        VARCHAR(45)    NOT NULL    COMMENT '아티스트 계정', 
+    `artist_name`  VARCHAR(45)    NOT NULL    COMMENT '아티스트 명', 
+    `comment`      VARCHAR(45)    NULL        COMMENT '아티스트 설명', 
+    `image_src`    VARCHAR(45)    NULL        COMMENT '아티스트 사진주소', 
     CONSTRAINT PK_ARTIST PRIMARY KEY (id, email)
 );
 
