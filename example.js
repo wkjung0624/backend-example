@@ -1,102 +1,92 @@
-var sampleData = [
-    {
-        code : "005930", // 005930
-        data : [
-            {
-                sdate : "210930103030", // YYMMDDhhmmss (optional)
-                edate : "210930103030", // YYMMDDhhmmss (optional)
-                open : 1000,
-                high : 5000,
-                low : 500,
-                close : 1200
-            },
-            {
-                sdate : "210930103031", // YYMMDDhhmmss (optional)
-                edate : "210930103032", // YYMMDDhhmmss (optional)
-                open : 1000,
-                high : 5000,
-                low : 500,
-                close : 1200
-            },
-        ]
-    },
-    {
-        code : "035720", // 005930
-        data : [
-            {
-                sdate : "210930103035", // YYMMDDhhmmss (optional)
-                edate : "210930103040", // YYMMDDhhmmss (optional)
-                open : 10200,
-                high : 50200,
-                low : 5020,
-                close : 12200
-            },
-            {
-                sdate : "210930103030", // YYMMDDhhmmss (optional)
-                edate : "210930103030", // YYMMDDhhmmss (optional)
-                open : 10020,
-                high : 50200,
-                low : 5020,
-                close : 12200
-            },
-        ]
-    },
-    {
-        code : "000080", // 005930
-        data : [
-            {
-                sdate : "210930103030", // YYMMDDhhmmss (optional)
-                edate : "210930103030", // YYMMDDhhmmss (optional)
-                open : 1111000,
-                high : 5111000,
-                low : 511100,
-                close : 1111200
-            },
-            {
-                sdate : "210930103030", // YYMMDDhhmmss (optional)
-                edate : "210930103030", // YYMMDDhhmmss (optional)
-                open : 1099900,
-                high : 5099900,
-                low : 509990,
-                close : 1299900
-            },
-        ]
-    },
-]
+/*
+npm i axios cors express express-session connect-redis 
 
-
-const axios = require('axios');
+https://redis.io/commands/command
+*/
 const cors = require('cors');
+const redis = require('redis');
+const axios = require('axios');
+const session = require('express-session');
+const connectRedis = require('connect-redis');
+const RedisStore = connectRedis(session);
+const redisClient = redis.createClient({
+    host: '127.0.0.1',
+    port: 6379
+});
+const db = {
+    database: "dev_class",
+    connectionLimit: 10,
+    host: "127.0.0.1",
+    user: "root",
+    password: "mariadb"
+};
+const express = require('express')
+const app = express();
 
-let express = require('express')
-let http = require('http')
-let app = express()
+// redisClient.on('error', function (err) {
+//     console.log('redis server not connected')
+// });
+
+// redisClient.on('connect', function (err) {
+//     console.log('redis connect')
+// });
+
+let http = require('http');
+const {
+    client
+} = require('./redis.js');
 let server = http.createServer(app);
 
 app.use(express.json());
 app.use(cors());
-
-// For parsing application/x-www-form-urlencoded
 app.use(express.urlencoded({
     extended: true
 }));
+// For parsing application/x-www-form-urlencoded
 
+app.use(session({
+    secret: 'secret$%12',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        secure: false,
+        maxAge: 24 * 60 * 60 // 쿠키 유효시간 1시간
+    },
+    store: new RedisStore({
+        client: redis,
+        host: 'localhost',
+        port: 6379,
+        prefix: 'session:',
+        db: 0,
+        saveUninitialized: false,
+        resave: false
+    })
+}));
 
 app.get('/', function (req, res) {
+    console.log("TE2ST");
+    redisClient.set('foo', 'barz', (err, reply) => {
+        redisClient.get('foo', (err, reply) => {
+            // if (err) throw err;
+            console.log(reply);
+        })
+    })
     res.status(404).send('Not found');
 });
 
-app.get('/item', function(req, res){
+app.get('/api', async (req, res) => {
+    console.log(req.query.key);
+    console.log(req.query.value);
+    //res.send(await req.db(request.params.alias, request.body.param, request.body.where));
+    redisClient.set(req.query.key, req.query.value, (err, reply) => {
 
-    for(var temp of sampleData){
-        if(req.query.code == temp.code){
-            res.send(temp);
-            //result.push(temp)    
-        }    
-    }
-    // console.log(req.query.code);
-    // console.log(req.query.sdate);
-    // console.log(req.query.edate);
+    })
+    redisClient.get(req.query.key, (err, reply) => {
+        // if (err) throw err;
+        console.log(reply);
+    })
+
+    res.status(404).send('Not found');
 });
 
 server.listen(5000, function () {
