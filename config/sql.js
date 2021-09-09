@@ -81,6 +81,11 @@ module.exports = {
         
     },
 
-// 
+    testQuery : {
+        query : `select * from t_test`
+    },
+    testQuery2 : {
+        query : `select * from t_test where testcol <= 1000`
+    },
 
 }

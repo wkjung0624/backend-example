@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS t_user
     `id`            INT            NOT NULL    AUTO_INCREMENT, 
     `email`         VARCHAR(45)    NOT NULL    COMMENT '사용자 이메일', 
     `name`          VARCHAR(10)    NOT NULL    COMMENT '사용자 명', 
-    `pwd_salt`      char(16)       NOT NULL    COMMENT '비밀번호 솔트값'
+    `pwd_salt`      char(16)       NOT NULL    COMMENT '비밀번호 솔트값',
     `pwd_hash`      char(64)       NOT NULL    COMMENT '비밀번호 해쉬값',
     `phone_number`  char(11)       NULL        COMMENT '핸드폰인증', 
     `bank_account`  varchar(30)    NULL        COMMENT '실계좌번호', 
@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS t_user
     CONSTRAINT PK_USER PRIMARY KEY (id, email)
 );
 
-ALTER TABLE t_user COMMENT '회원정보_끝';
+ALTER TABLE t_user COMMENT '회원정보';
 
 
 -- t_artist Table Create SQL
@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS t_artist
     `artist_name`  VARCHAR(45)    NOT NULL    COMMENT '아티스트 명', 
     `comment`      VARCHAR(45)    NULL        COMMENT '아티스트 설명', 
     `image_src`    VARCHAR(45)    NULL        COMMENT '아티스트 사진주소', 
-    `nft_id`       INT            NULL        COMMENT '아티스트가 만든 음원'
+    `nft_id`       INT            NULL        COMMENT '아티스트가 만든 음원',
     CONSTRAINT PK_ARTIST PRIMARY KEY (id, email)
 );
 
