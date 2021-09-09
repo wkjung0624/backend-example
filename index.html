@@ -1,0 +1,32 @@
+<html>
+<script src="http://developers.kakao.com/sdk/js/kakao.js"></script>
+<script>
+    window.Kakao.init("16fe234230416b76f219eef43b4488fb")
+
+    function kakaoLogin(){
+        alert("hi")
+        window.Kakao.Auth.login({
+            scope: 'profile_nickname',
+            success: getKakao,
+        })
+    }
+    function getKakao(){
+        alert("thio")
+        window.Kakao.API.request({
+            url:'/v2/user/me',
+            success : res => {
+                const kakao_account = res.kakao_account;
+                const nickname = kakao_account.profile_nickname;
+                console.log(kakao_account)
+            },
+            fail : error => {
+                alert("SSSS");
+            }
+        })
+    }
+</script>
+<a id="custom-login" onClick="kakaoLogin()">
+    <img src="//k.kakaocdn.net/14/dn/btqCn0WEmI3/nijroPfbpCa4at5EIsjyf0/o.jpg" width="222"/>
+</a>
+`12`
+</html>
